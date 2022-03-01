@@ -1,0 +1,47 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% load humanize %}
+<!doctype html>
+{% block title%}
+The Ambassadors Store-Ota
+{% endblock %}
+
+{% block content %}
+<section id="hero" class="d-flex align-items-center justify-content-center">
+
+    <div class="page-content">
+        <div class="row">
+            <div class="col-sm-12">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="box-authentication">
+                        <h1 class="text-center text-bold"><i class="ri-shopping-cart-fill text-warning"></i>Store</h1>
+                        {% if messages %}
+                        {% for mes in messages %}
+                        <div class="alert alert-danger card-header">{{ mes }}</div>
+                        {% endfor %}
+                        {% endif %}
+                        <div class="card p-5">
+                            <label for="username_login" class="text-dark">Username<i
+                                    class="ri-user-2-line text-warning"></i></label>
+                            <input type="username" name="username" class="form-control" id="emmail_login"
+                                placeholder="Username" autocomplete="off">
+                            <label for="password_login" class="text-dark">Password<i
+                                    class="ri-key-2-line text-warning"></i></label>
+                            <input type="password" name="password" class="form-control" id="password_login"
+                                placeholder="*******" autocomplete="off">
+                            <!-- <p class="forgot-pass"><a href="">Forgot your password?</a>
+                        </p> -->
+                            <button type="submit"
+                                class="btn btn-block btn-outline-dark text-uppercase text-bold mt-4"><i
+                                    class="ri-lock-unlock-line"></i>
+                                Log-in</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

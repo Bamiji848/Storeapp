@@ -1,0 +1,122 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% load humanize %}
+<!doctype html>
+{% block title%}
+The Ambassadors Store-Ota
+{% endblock %}
+
+{% block content %}
+<!-- ======= Hero Section ======= -->
+<section id="hero" class="d-flex align-items-center justify-content-center">
+    <div class="container" data-aos="fade-up">
+
+        <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="150">
+            <div class="col-xl-6 col-lg-8">
+                <h3 class="text-light text-bold">Disbursed Orders</h3>
+                <h3 class="text-light text-bold">{% if request.user.is_authenticated %}<span
+                        class="text-info text-bold text-uppercase username">
+                        {{request.user.username}}<i class="ri-user-5-line text-light text-bold"></i> </span>
+                    {% endif %}<span class="text-sm"><a href="{% url 'storeapp:logout_user' %}"
+                            class="ml-3 btn btn-outline-light">Log-out</a></span>
+                    <span>
+                        <a href="{% url 'storeapp:change_password' %}" class="ml-3 btn btn-outline-light">Change
+                            password</a>
+                    </span>
+                </h3>
+                <h5 class="text-warning text-bold time" id="date-time">
+                    <script>
+                        setInterval(() => {
+                            var dt = new Date();
+                            document.getElementById("date-time").innerHTML = dt;
+                        }, 1000);
+
+                    </script>
+                </h5>
+            </div>
+            <div class="col-xl-9 col-lg-9 list text-right">
+                <!-- <a href="{% url 'store:add_category' %}">Add New
+                                Item</a> -->
+                <a href="{% url 'storeapp:index' %}">Return to Dashboard</a>
+
+            </div>
+        </div>
+
+        <div class="row mt-5 justify-content-center" data-aos="zoom-in" data-aos-delay="250">
+            <div class="col-xl-12 col-md-12 col-12 mb-2 p-2">
+                <div class="icon-box">
+                    <i class="ri-store-line"></i>
+                    {% if list_object|length > 0 %}
+                    <h3 class="order-total"><a href="">
+                            {{list_object|length}} orders has been disbursed</a>
+                    </h3>
+                </div>
+            </div>
+            <div class="col-xl-12 col-md-12 col-12 mt-4 mt-xl-0">
+                <!-- <div class="icon-box"> -->
+                <!-- <h3 class="text-light text-bold">List</h3> -->
+                <div class="m-3">
+                    <h6 class="text-light">Filter-By:</h6>
+                    <span class="text-light">Item Category:</span>
+                    <span class="text-light"><a href="{% url 'storeapp:store_dashboard' %}">All</a><span
+                            class="text-light">/</span></span>
+                    {% for c in categories %}
+                    <a href="{{ c.get_absolute_url }}" class="filter">
+                        <span class="text-warning">{{ c.item_category}}</span><span class="text-light">/</span></a>
+                    {% endfor %}
+                </div>
+                <table class="table table-striped table-responsive text-bold text-light">
+                    <tr>
+                        <th class="text-warning text-bold bg-dark">Date Uploaded</th>
+                        <th class="text-warning text-bold bg-dark">VoucherID</th>
+                        <th class="text-warning text-bold bg-dark">Name</th>
+                        <th class="text-warning text-bold bg-dark">Item(<span class="text-light">Quantity</span>)</th>
+                        <!-- <th class="text-warning text-bold bg-dark">Proof of Payment</th> -->
+                        <!-- <th class="text-warning text-bold bg-dark">Outstanding</th> -->
+                        <th class="text-warning text-bold bg-dark">Class</th>
+                        <th class="text-warning text-bold bg-dark">Gender</th>
+                        <th class="text-warning text-bold bg-dark" colspan="2">Status</th>
+                    </tr>
+
+                    {% if list_object %}
+                    {% for list in list_object %}
+                    <tr>
+                        <td><a href="">{{ list.upload_date }}</a>
+                        </td>
+                        <td>AMBSCID{{list.id}}</td>
+                        <td>{{ list.studentrecord }}</td>
+                        <td class="text-warning text-bold">
+                            <ol>
+                                {% for item in list.items.all %}
+                                <li>{{ item.product.product_name1 }}(<span class="
+                                                                text-light text-bold">{{ item.quantity }}</span>) </li>
+                                {% endfor %}
+                            </ol>
+                        </td>
+
+                        <!-- <td>&#8358;{{ list.outstanding|floatformat:0|intcomma }}</td> -->
+                        <td>{{ list.studentclass }}</td>
+                        <td>{{ list.sex }}</td>
+                        <td><i class="ri-tick-2-line text-bold text-warning"></i>
+                            <span class="text-warning text-bold filter">Collected</a></span>
+                        </td>
+                        <!-- <td><i class="ri-pencil-line text-bold text-warning"></i>Add Additional Info</td> -->
+                    </tr>
+
+                    {% endfor %}
+
+                    {% endif %}
+
+                </table>
+                <!-- </div> -->
+                {% include 'storeapp/pagination.html' with page=list %}
+            </div>
+            {% else %}
+            <h3><a href="">No Item Disbursed</a></h3>
+            {% endif %}
+        </div>
+
+    </div>
+</section><!-- End Hero -->
+
+{% endblock %}

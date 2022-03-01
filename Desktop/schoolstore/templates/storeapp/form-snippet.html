@@ -1,0 +1,41 @@
+{% if messages %}
+{% for mess in messages %}
+<div class="alert alert-success">{{ mess }}</div>
+{% endfor %}
+{% endif %}
+
+
+{% if form.non_field_errors %}
+{% for field in form.non_field_errors %}
+<span class="text-danger">{{ field }}</span><br>
+{% endfor %}
+{% endif %}
+<!-- <span class="text-danger">{{ form.non_field_errors }}</span> -->
+
+
+
+{% for hidden_field in form.hidden_fields %}
+<span class="text-danger">{{ hidden_field.errors }}</span>
+{{ hidden_field }}
+{% endfor %}
+
+{% for my_field in form.visible_fields %}
+<!-- THIS IS FOR ERROR IN THE FORM -->
+{% if my_field.errors %}
+{% for err in my_field.errors %}
+<span class="text-danger">{{ err }}</span>
+{% endfor %}
+{% endif %}
+<!-- THIS IS FOR THE FIELDS -->
+<div class="form-group col-sm-12">
+    {{ my_field.label_tag }}
+    {{ my_field }}
+    {% if my_field.help_text %}
+    <span class="help-block text-muted">{{ my_field.help_text }}</span>
+    {% endif %}
+</div>
+
+<!-- END THE FIELDS -->
+{% endfor %}
+
+{% csrf_token %}

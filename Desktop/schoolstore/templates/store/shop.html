@@ -1,0 +1,71 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% load humanize %}
+<!doctype html>
+{% block title%}
+The Ambassadors Store-Ota
+{% endblock %}
+
+{% block content %}
+<!-- ======= Hero Section ======= -->
+<section id="hero" class="d-flex align-items-center justify-content-center">
+    <div class="container" data-aos="fade-up">
+
+        <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="150">
+            <div class="col-xl-8 col-lg-8">
+                <h6 class="text-light text-bold">{% if request.user.is_authenticated %}<span
+                        class="text-info text-bold text-uppercase username">
+                        {{request.user.username}}<i class="ri-user-5-line text-light text-bold"></i>
+                    </span>
+                    <a href="{% url 'store:cart_detail' %}" title="cart detail">
+                        <span class="text-warning">[<i class="ri-shopping-cart-line text-"></i>{{ cart|length }}]
+                        </span>
+                    </a>
+                    {% endif %}<span class="text-sm"><a href="{% url 'store:logoutpage' %}"
+                            class="ml-3 btn btn-outline-light">Log-out</a></span>
+                    <span>
+                        <a href="{% url 'password_change' %}" class="ml-3 btn btn-outline-light">Change password</a>
+                    </span>
+                </h6>
+                <h3 class="text-light text-bold">Items</h3>
+                <h5 class="text-warning text-bold time" id="date-time">
+                    <script>
+                        setInterval(() => {
+                            var dt = new Date();
+                            document.getElementById("date-time").innerHTML = dt;
+                        }, 1000);
+
+                    </script>
+                </h5>
+            </div>
+            <div class="col-xl-4 col-lg-4 list">
+
+                <a href="{% url 'store:index' %}">Return to Dashboard</a>
+
+            </div>
+        </div>
+        <div class="row mt-3 justify-content-center" data-aos="zoom-in" data-aos-delay="250">
+            {% for product in products %}
+            <div class="col-xl-2 col-md-4 col-6 mb-2">
+                <div class="icon-box">
+                    <h6>
+                        <a href="{{ product.get_absolute_url }}">
+                            {{product.product_name1}}
+                        </a>
+                    </h6>
+                    <h6 class="text-center text-light">
+                        &#8358;{{product.product_price1|floatformat:0|intcomma}}</h6>
+                    <p><a href="{{ product.get_absolute_url }}"
+                            class="btn btn-outline-warning text-uppercase text-bold">Select</a>
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    </div>
+</section><!-- End Hero -->
+
+
+{% endblock %}

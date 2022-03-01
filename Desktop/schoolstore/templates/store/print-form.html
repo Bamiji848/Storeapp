@@ -1,0 +1,77 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% load humanize %}
+<!--====== TITLE TAG ======-->
+{% block title %}
+Store Item Purchase Voucher
+{% endblock %}
+
+{% block content %}
+<section class="d-flex align-items-center justify-content-center watermark">
+    <div class="container hedliner">
+        <div class="row justify-content-center mt-1">
+            <h4 class="text-uppercase"><img src="{% static 'store/assets/img/favicon.png' %}" alt="" class="img-fluid"
+                    style="height: 40px;width: auto;">The Ambassadors Schools, Sango Ota
+            </h4>
+        </div>
+        <div class="p-5 bg-light">
+            <div class="card-header text-dark text-bold">
+                <h5 class="font-receipt">Store Item(s) Purchase Invoice</h5>
+            </div>
+            <div class="">
+                {% if inventory %}
+                <div class="form-group">
+                    <h6 class="font-receipt card-body p-2">Invoice No: <span
+                            class="invoice-id">AMBSCID{{inventory.id}}</span></h6>
+                    <div class="col-md-12">
+                        <span class="text-dark text-bold p-3 mr-3">Fullname:</span><span
+                            class="font-receipt">{{inventory.studentrecord}}</span>
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <div class="col-md-12">
+                        <span class="text-dark text-bold p-3 mr-4">Gender:</span><span class="font-receipt">
+                            {{inventory.sex}}</span>
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <div class="col-md-12">
+                        <span class="text-dark text-bold p-3 mr-4">Class:</span><span class="font-receipt">
+                            {{ inventory.studentclass }}</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-12 card-header">
+                        <span class="text-dark text-bold">Item(s):</span>
+                        <span class="font-receipt">
+                            {% for item in inventory.items.all %}
+                            <li class="list-group-item" style="color: deeppink;font-weight: bold;">
+                                <span class="text-danger" style="font-weight: bold;">
+                                    {{ item.quantity }}</span>
+                                {{ item.product.product_name1 }}
+                                <span class="text-danger"
+                                    style="font-weight: bold;">@&#8358;{{item.product_price1|floatformat:2|intcomma}}</span>
+                                <span style="color: black;font-weight: bold;">
+                                    = &#8358;{{ item.get_cost|floatformat:2|intcomma }}</span>
+                            </li>
+                            {% endfor %}
+                            <li class="list-group-item" style="color: black;font-weight: bold;">Total Amount: &#8358;
+                                {{inventory.get_total_cost|floatformat:2|intcomma }}</li>
+                            <br>
+
+                            <h5>__________________________</h5>
+                            <h5>Paid and Collected</h5>
+                            <h6>(Please append your signature above with date after collecting your items.Thanks)</h6>
+                        </span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <form class="">
+            <input type=button class="btn" value="Print" onClick="javascript:window.print()">
+        </form>
+    </div>
+</section>
+{% endblock %}

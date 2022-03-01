@@ -1,0 +1,17 @@
+<!-- Pagination -->
+<div class="shopping-pagination text-center list text-light text-bold">
+    <ul class="pagination">
+        {% if page.has_previous %}
+        <li class=""><a href="?page={{ page.previous_page_number }}">&laquo;</a></li>
+        <li class=""><a href="?page={{ page.previous_page_number }}">
+                {{page.previous_page_number}} <span class="sr-only">(current)</span></a></li>
+        {% endif %}
+        {% if page.has_next %}
+        <li><a href="#">{{ page.number}}</a></li>
+        <li><a href="?page={{ page.next_page_number }}">{{ page.next_page_number}}</a></li>
+        <!-- <li><a href="#">5</a></li> -->
+        <li><a href="?page={{ page.next_page_number }}">&raquo;</a></li>
+        {% endif %}
+    </ul>
+</div>
+<!-- Pagination end-->

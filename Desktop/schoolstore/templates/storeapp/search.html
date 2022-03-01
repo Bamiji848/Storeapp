@@ -1,0 +1,111 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+<!doctype html>
+{% block title%}
+The Ambassadors Store-Ota
+{% endblock %}
+
+{% block content %}
+<!-- ======= Hero Section ======= -->
+<section id="hero" class="d-flex align-items-center justify-content-center">
+    <div class="container" data-aos="fade-up">
+        <div class="site-section">
+            <div class="container">
+                <div class="list mb-3">
+                    {% if request.user.is_authenticated %}
+                    <a href="{% url 'storeapp:index' %}">Return to Dashboard</a>
+                    {% endif %}
+                </div>
+
+
+                <div class="row mb-5">
+                    <div class="col-md-12 col-sm-12">
+
+                        <h3 class="text-light text-bold">Search Page</h3>
+
+                        {% if submitbutton == 'Search' and request.GET.q != '' %}
+                        {% if results %}
+                        <h6 class="text-light text-bold">Results for <span
+                                class="text-warning text-bold">AMBSCID{{request.GET.q }}</span></h6>
+
+                        <div class="row">
+                            {% for r in results %}
+                            <table class="table table-striped table-responsive text-bold text-light">
+                                <tr>
+                                    <th class="text-warning text-bold bg-dark">VoucherID</th>
+                                    <th class="text-warning text-bold bg-dark">Name</th>
+                                    <th class="text-warning text-bold bg-dark">Item(Quantity)</th>
+                                    <th class="text-warning text-bold bg-dark">Class</th>
+                                    <th class="text-warning text-bold bg-dark">Sex</th>
+                                    <th class="text-warning text-bold bg-dark">Date Uploaded</th>
+                                    <th class="text-warning text-bold bg-dark" colspan="2">Status</th>
+                                </tr>
+                                <tr>
+                                    <td>AMBSCID{{r.id}}</td>
+                                    <td>{{ r.studentrecord }}</td>
+                                    <td>
+                                        <ol>
+                                            {% for item in r.items.all %}
+                                            <li>{{ item.product.product_name1 }}(<span class="
+                                                                            text-light text-bold">
+                                                    {{ item.quantity }}</span>) </li>
+                                            {% endfor %}
+                                        </ol>
+                                    </td>
+                                    <td>{{ r.studentclass }}</td>
+                                    <td>{{ r.sex }}</td>
+                                    <td><a href="">{{ r.upload_date }}</a>
+                                    </td>
+                                    <td>
+                                        {% if r.disburse %}
+                                        <i class="ri-tick-2-line text-bold text-warning"></i>
+                                        <span class="text-warning filter">Collected</a></span>
+                                        {% elif r.packaged %}
+                                        <form method="POST" action="{% url 'storeapp:disburse_submit' r.id %}">
+                                            {% csrf_token %}
+                                            {{add_form|crispy}}
+
+                                            <button type="submit" class="btn btn-outline-warning"><i
+                                                    class="ri-store-line text-bold text-warning"></i>Disburse
+                                            </button>
+                                        </form>
+                                        <span class="text-warning filter">(click only if item has
+                                            been collected by student/parent/guardian)</a></span>
+                                        {% else %}
+                                        <form method="POST" action="{% url 'storeapp:package_submit' r.id %}">
+                                            {% csrf_token %}
+                                            {{add_form|crispy}}
+
+                                            <button type="submit" class="btn btn-outline-warning"><i
+                                                    class="ri-store-line text-bold text-warning"></i>Packaged?
+                                            </button>
+                                        </form>
+                                    <td><a href="https://wa.me/{{list.parenttel}}?text=Top of the day to you,%20 We would like to know {{list.studentrecord}}'s size measurement%20for {% for item in list.items.all %} {{item.product.product_name1}}({{ item.quantity }}){% endfor %} %20from%20The Ambassadors%20Schools, Sango Ota, Ogun State, Nigeria. Find our chat below;"
+                                            target="_blank;" class="" title="chat with parent"><i
+                                                class="ri-whatsapp-line text-bold text-success whatsapp"></i></a></td>
+                                    {% endif %}
+
+                                    </td>
+                                </tr>
+
+                                {% endfor %}
+
+
+                            </table>
+                            {% else %}
+                            <div class="text-light text-bold">
+                                No Record Found for AMBSCID{{request.GET.q }}
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

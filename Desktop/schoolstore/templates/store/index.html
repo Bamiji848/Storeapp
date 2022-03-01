@@ -1,0 +1,97 @@
+{% extends 'store/base.html' %}
+{% load static %}
+<!doctype html>
+{% block title%}
+The Ambassadors Store-Ota
+{% endblock %}
+
+{% block content %}
+<!-- ======= Hero Section ======= -->
+<section id="hero" class="d-flex align-items-center justify-content-center">
+  <div class="container" data-aos="fade-up">
+
+    <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="150">
+      <div class="col-xl-12 col-lg-12">
+        <h3 class="text-light text-bold">{% if request.user.is_authenticated %}<span
+            class="text-warning text-bold text-uppercase username">
+            {{request.user.username}}<i class="ri-user-5-line text-light text-bold"></i> </span> {% endif %}<span
+            class="text-sm"><a href="{% url 'store:logoutpage' %}" class="ml-3 btn btn-outline-light">Log-out</a></span>
+          <span>
+            <a href="{% url 'password_change' %}" class="ml-3 btn btn-outline-light">Change password</a>
+          </span>
+        </h3>
+        <h3 class="text-light text-bold">Store Dashboard</h3>
+        <h5 class="text-warning text-bold time" id="date-time">
+          <script>
+            setInterval(() => {
+              var dt = new Date();
+              document.getElementById("date-time").innerHTML = dt;
+            }, 1000);
+
+          </script>
+        </h5>
+      </div>
+    </div>
+
+    <div class="row justify-content-center mt-4" data-aos="fade-up" data-aos-delay="150">
+      <div class="col-xl-12 col-lg-12">
+        <form action="{% url 'store:searchposts' %}" method="GET" value="{{request.GET.q}}" class="form-inline">
+          <div class="form-group">
+            <input type="text" name="q" value="{{request.GET.q}}" placeholder="Enter Voucher ID.." class="form-control">
+            <input type="submit" name="submit" value="Search" class="form-control btn btn-outline-warning" />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="row mt-5 justify-content-center" data-aos="zoom-in" data-aos-delay="250">
+      <div class="col-xl-12 col-md-8 col-8 offset-2 mb-2 p-2">
+        <div class="icon-box">
+          <i class="ri-store-line"></i>
+          {% if object_list|length > 0 %}
+          <h3 class="order-total"><a href="">There {% if object_list|pluralize %}are{% else %}is{% endif %}
+              {{object_list|length }}
+              order{{ object_list|pluralize }} in the store awaiting disbursal</a>
+          </h3>
+          {% else %}
+          <h3><a href="">No record is available</a></h3>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-xl-2 col-md-4 col-6 ">
+        <div class="icon-box">
+          <i class="ri-add-line"></i>
+          <h3><a href="{% url 'store:shop'  %}">Add New Order</a></h3>
+        </div>
+      </div>
+      <div class="col-xl-2 col-md-4 col-6 mt-4 mt-md-0">
+        <div class="icon-box">
+          <i class="ri-calendar-todo-line"></i>
+          <h3><a href="">Edit Profile Information</a></h3>
+        </div>
+      </div>
+      <div class="col-xl-2 col-md-4 col-6 mt-4 mt-xl-0">
+        <div class="icon-box">
+          <i class="ri-user-line"></i>
+          <h3><a href="{% url 'store:user_list' %}">View Users</a></h3>
+        </div>
+      </div>
+      <div class="col-xl-2 col-md-4 col-6 mt-4 mt-xl-0">
+        <div class="icon-box">
+          <i class="ri-database-2-line"></i>
+          <h3><a href="{% url 'store:list_post' %}">View Records</a></h3>
+        </div>
+      </div>
+      <div class="col-xl-2 col-md-4 col-6 mt-4 mt-xl-0">
+        <div class="icon-box">
+          <i class="ri-database-2-line"></i>
+          <h3><a href="{% url 'store:transaction' %}">Sales Report</a></h3>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section><!-- End Hero -->
+
+
+{% endblock %}

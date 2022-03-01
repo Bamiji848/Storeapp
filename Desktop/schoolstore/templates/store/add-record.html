@@ -1,0 +1,154 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+Add Record
+{% endblock %}
+
+{% block content %}
+<!-- ======= Hero Section ======= -->
+<section id="hero" class="d-flex align-items-center justify-content-center">
+    <div class="container" data-aos="fade-up">
+        <div class="row m-5" data-aos="zoom-in" data-aos-delay="250">
+            <div class="row list">
+                <a href="{% url 'store:add_category' %}">Add New
+                    Category</a>
+                <a href="">Update Inventory</a>
+                <a href="{% url 'store:list_post' %}">View Records</a>
+                <a href="{% url 'store:index' %}">Return to Dashboard</a>
+
+            </div>
+            <div class="col-6 offset-3 mb-5 text-light text-bold">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+                You Can also:
+                <h3>Add New Order</h3>
+                <form method="post" enctype="multipart/form-data" id="personForm"
+                    data-cities-url="{% url 'store:ajax_load_class' %}"
+                    data-sex-url="{% url 'store:ajax_load_gender' %}" novalidate>
+
+                    {% csrf_token %}
+                    {% if error_message %}
+                    <p class="p-d ml-b" id="error-message">
+                        {{ error_message }}</p>
+                    {% endif %}
+
+                    <div class="form-group clearfix">
+                        <div class="">
+                            {{ add_form.studentrecord| as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <div class="">
+                            {{ add_form.studentclass| as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <div class="">
+                            {{ add_form.sex| as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <div class="row">
+                            <div class="col-12 form-group">
+                                <div style="float: left;width: 300px;">
+                                    {{ add_form.item_category| as_crispy_field }}
+                                </div>
+                                <div style=" float: right;width: 130px;padding-top: 30px;">
+                                    {{add_form.quantity| as_crispy_field}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <div class="">
+                            {{ add_form.size| as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <div class="">
+                            {{ add_form.outstanding| as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <div class="form-group">
+                            {{ add_form.active | as_crispy_field}}
+                        </div>
+                    </div>
+                    <input type="submit" class="btn btn-outline-warning btn-block" value="Add Record" id="register">
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <script src="{% static 'store/assets/vendor/jquery/jquery.min.js' %}">
+    </script>
+    <script>
+        $("#id_studentrecord").change(function () {
+            var url = $("#personForm").attr("data-cities-url");  // get the url of the `load_cities` view
+            var studentrecordId = $(this).val();  // get the selected country ID from the HTML input
+
+            $.ajax({                       // initialize an AJAX request
+                url: url,                // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+                data: {
+                    'studentrecord': studentrecordId       // add the country id to the GET parameters
+                },
+                success: function (data) {   // `data` is the return of the `load_cities` view function
+                    $("#id_studentclass").html(data);  // replace the contents of the city input with the data that came from the server
+                }
+            });
+
+        });
+        // $("#id_studentrecord").change(function () {
+        //     var url = $("#personForm").attr("data-load-url");  // get the url of the `load_cities` view
+        //     var studentrecordId = $(this).val();  // get the selected country ID from the HTML input
+
+        //     $.ajax({                       // initialize an AJAX request
+        //         url: url,                // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        //         data: {
+        //             'studentrecord': studentrecordId       // add the country id to the GET parameters
+        //         },
+        //         success: function (data) {   // `data` is the return of the `load_cities` view function
+        //             $("#id_class_arm").html(data);  // replace the contents of the city input with the data that came from the server
+        //         }
+        //     });
+
+        // });
+
+        $("#id_studentrecord").change(function () {
+            var url = $("#personForm").attr("data-sex-url");  // get the url of the `load_cities` view
+            var studentrecordId = $(this).val();  // get the selected country ID from the HTML input
+
+            $.ajax({                       // initialize an AJAX request
+                url: url,                // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+                data: {
+                    'studentrecord': studentrecordId       // add the country id to the GET parameters
+                },
+                success: function (data) {   // `data` is the return of the `load_cities` view function
+                    $("#id_sex").html(data);  // replace the contents of the city input with the data that came from the server
+                }
+            });
+
+        });
+
+        // $("#id_studentrecord").change(function () {
+        //     var url = $("#personForm").attr("data-programtype-url");  // get the url of the `load_cities` view
+        //     var studentrecordId = $(this).val();  // get the selected country ID from the HTML input
+
+        //     $.ajax({                       // initialize an AJAX request
+        //         url: url,                // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        //         data: {
+        //             'studentrecord': studentrecordId       // add the country id to the GET parameters
+        //         },
+        //         success: function (data) {   // `data` is the return of the `load_cities` view function
+        //             $("#id_program_type").html(data);  // replace the contents of the city input with the data that came from the server
+        //         }
+        //     });
+
+        // });
+    </script>
+</section><!-- End Hero -->
+{% endblock %}

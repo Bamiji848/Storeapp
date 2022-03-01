@@ -1,0 +1,244 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+<!doctype html>
+{% block title%}
+The Ambassadors Store-Ota
+{% endblock %}
+
+{% block content %}
+<!-- ======= Hero Section ======= -->
+<section id="hero" class="d-flex align-items-center justify-content-center">
+    <div class="container" data-aos="fade-up">
+
+        <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="150">
+            <div class="col-xl-12 col-lg-12">
+                <h3 class="text-light text-bold">Store Items</h3>
+                <h6 class="text-bold text-warning">
+                    {% with total_items=cart|length %}
+                    {% if cart|length > 0 %}
+                    <a href="{% url 'store:cart_detail' %}" class="text-warning">
+                        Quantity:{{ total_items }} item {{ total_items|pluralize }}<br>
+                        Total:&#8358;{{cart.get_total_price|floatformat:0|intcomma }}
+                    </a>
+                </h6>
+                <h5 class="text-warning text-bold time" id="date-time">
+                    <script>
+                        setInterval(() => {
+                            var dt = new Date();
+                            document.getElementById("date-time").innerHTML = dt;
+                        }, 1000);
+
+                    </script>
+                </h5>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-4" data-aos="fade-up" data-aos-delay="150">
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 list">
+                    <a href="{% url 'store:index' %}">Return to Dashboard</a>
+                    <a href="{% url 'store:shop' %}">Return to Store</a>
+
+                </div>
+            </div>
+        </div>
+        <div class="mt-5 d-flex">
+            <table class="table table-striped table-responsive text-bold text-light">
+                <thead>
+                    <tr>
+                        <th class="product-h">Product</th>
+                        <th>Price</th>
+                        <th class="quan">Quantity</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart %}
+                    {% with product=item.product %}
+
+                    <tr>
+                        <td class="product-col">
+                            <div class="text-light">
+                                <h5>{{ product.product_name1 }}</h5>
+                            </div>
+                        </td>
+                        <td class="price-col">
+                            &#8358;{{ item.product_price1|floatformat:0|intcomma }}
+                        </td>
+                        <td class="quantity-col">
+                            <div class="">
+                                <form action="{% url 'store:cart_add' product.id %}" method="post">
+                                    {% csrf_token %}
+                                    {{ item.update_quantity_form.quantity }}
+                                    {{ item.update_quantity_form.update }}
+                                    <input type="submit" value="Update" class="btn btn-outline-warning">
+                                </form>
+                            </div>
+                        </td>
+                        <td class="total">
+                            &#8358;{{ item.total_price|floatformat:2|intcomma }}
+                        </td>
+                        <td class="product-close"><a href="{% url 'store:cart_remove' product.id %}">x</a></td>
+                    </tr>
+                    {% endwith %}
+                    {% endfor %}
+                </tbody>
+                <thead>
+                    <tr class="m-3">
+                        <th class="total-cart">Cart Total</th>
+                        <td class="total-cart-p m-3">
+                            &#8358;{{ cart.get_total_price|floatformat:2|intcomma }}</td>
+                    </tr>
+                </thead>
+            </table>
+            <form method="post" enctype="multipart/form-data" id="personForm"
+                data-cities-url="{% url 'store:ajax_load_class' %}" data-sex-url="{% url 'store:ajax_load_gender' %}">
+
+                {% csrf_token %}
+                {% if error_message %}
+                <p class="p-d ml-b" id="error-message">
+                    {{ error_message }}</p>
+                {% endif %}
+
+                <div class="form-group clearfix">
+                    <div class="">
+                        {{ add_form.studentrecord| as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <div class="">
+                        {{ add_form.studentclass| as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <div class="">
+                        {{ add_form.sex| as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <div class="row">
+                        <div class="col-12 form-group">
+                            <div style=" float: right;width: 130px;padding-top: 30px;">
+                                {{add_form.quantity}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <div class="">
+                        {{ add_form.size| as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <div class="">
+                        {{ add_form.paymentmode| as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <div class="">
+                        {{ add_form.account| as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <div class="">
+                        {{ add_form.parenttel| as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <div class="form-group">
+                        {{ add_form.active | as_crispy_field}}
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-outline-warning btn-block" value="Add Record" id="register">
+            </form>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-12">
+                <h3 class="text-danger text-uppercase text-bold" id="blink">
+                    Your cart is empty
+                </h3>
+                <div class="list">
+                    <a href="{% url 'store:index' %}">Return to Dashboard</a>
+                    <a href="{% url 'store:shop' %}">Return to Store</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    </div>
+    <script src="{% static 'store/assets/vendor/jquery/jquery.min.js' %}">
+    </script>
+    <script>
+        $("#id_studentrecord").change(function () {
+            var url = $("#personForm").attr("data-cities-url");  // get the url of the `load_cities` view
+            var studentrecordId = $(this).val();  // get the selected country ID from the HTML input
+
+            $.ajax({                       // initialize an AJAX request
+                url: url,                // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+                data: {
+                    'studentrecord': studentrecordId       // add the country id to the GET parameters
+                },
+                success: function (data) {   // `data` is the return of the `load_cities` view function
+                    $("#id_studentclass").html(data);  // replace the contents of the city input with the data that came from the server
+                }
+            });
+
+        });
+        // $("#id_studentrecord").change(function () {
+        //     var url = $("#personForm").attr("data-load-url");  // get the url of the `load_cities` view
+        //     var studentrecordId = $(this).val();  // get the selected country ID from the HTML input
+
+        //     $.ajax({                       // initialize an AJAX request
+        //         url: url,                // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        //         data: {
+        //             'studentrecord': studentrecordId       // add the country id to the GET parameters
+        //         },
+        //         success: function (data) {   // `data` is the return of the `load_cities` view function
+        //             $("#id_class_arm").html(data);  // replace the contents of the city input with the data that came from the server
+        //         }
+        //     });
+
+        // });
+
+        $("#id_studentrecord").change(function () {
+            var url = $("#personForm").attr("data-sex-url");  // get the url of the `load_cities` view
+            var studentrecordId = $(this).val();  // get the selected country ID from the HTML input
+
+            $.ajax({                       // initialize an AJAX request
+                url: url,                // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+                data: {
+                    'studentrecord': studentrecordId       // add the country id to the GET parameters
+                },
+                success: function (data) {   // `data` is the return of the `load_cities` view function
+                    $("#id_sex").html(data);  // replace the contents of the city input with the data that came from the server
+                }
+            });
+
+        });
+
+        // $("#id_studentrecord").change(function () {
+        //     var url = $("#personForm").attr("data-programtype-url");  // get the url of the `load_cities` view
+        //     var studentrecordId = $(this).val();  // get the selected country ID from the HTML input
+
+        //     $.ajax({                       // initialize an AJAX request
+        //         url: url,                // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        //         data: {
+        //             'studentrecord': studentrecordId       // add the country id to the GET parameters
+        //         },
+        //         success: function (data) {   // `data` is the return of the `load_cities` view function
+        //             $("#id_program_type").html(data);  // replace the contents of the city input with the data that came from the server
+        //         }
+        //     });
+
+        // });
+    </script>
+</section><!-- End Hero -->
+
+
+{% endblock %}

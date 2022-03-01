@@ -1,0 +1,25 @@
+{% extends 'store/base.html' %}
+{% load static %}
+<!doctype html>
+{% block title%}
+Log-Out
+{% endblock %}
+
+{% block content %}
+<section id="hero" class="d-flex align-items-center justify-content-center">
+    <div class="container" data-aos="fade-up">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="login-form">
+                    <div class="page-title text-center">
+
+                        <a href="{% url 'store:index' %}">
+                            <h3 style="color: orangered;">Confirm logout?</h3>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
